@@ -37,8 +37,8 @@ class HMMTagger(object):
         sequence=map_state(self.tag_set,route)
         result=''
         for word,tag in zip(sentlist,sequence):
-            result+=' '.join(word+'/'+tag)
-        return result
+            result+=''.join(' '+word+'/'+tag+' ')
+        return result.strip()
         
 
 def get_set(symbols):
