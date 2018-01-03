@@ -72,7 +72,7 @@ def process_corpus():
 def train():
     tagged_sents=process_corpus()
     tagged_words=[(w,t) for sent in tagged_sents for w,t in sent]
-    words_set=list(set([w for w,t in tagged_words]))
+    words_set=sorted(list(set([w for w,t in tagged_words])))
     words_set.append("UNK")
     labels_set=tags_set()
     emission_prob=cal_condition_prob(labels_set,words_set,tagged_words)
