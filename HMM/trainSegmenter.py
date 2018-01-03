@@ -25,7 +25,7 @@ def train():
     init_prob=np.array([-0.26268660809250016,-3.14e+100,-3.14e+100,-1.4652633398537678])
 
     char_tag=preprocessing()
-    char_set=list(set([c for c,t in char_tag]))
+    char_set=sorted(list(set([c for c,t in char_tag])))
     char_set.append("UNK")
     emission_prob=cal_condition_prob(tag_set,char_set,char_tag)
     
