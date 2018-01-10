@@ -59,35 +59,35 @@ def process_corpus():
        ('中共中央', 'nt'),('总书记', 'n'),('、', 'w'),('国家', 'n'),('主席', 'n'),
         ('江', 'nr'),('泽民', 'nr')]
     """
-    f=open("data/ThePeople'sDaily199801.txt",'r',encoding='utf-8')
+    f = open("data/ThePeople'sDaily199801.txt", 'r', encoding='utf-8')
     
-    tagged_sents=[]
+    tagged_sents = []
     for line in f:
-        raw_word_tag=[tuple(word.split('/')) for word in line.split()[1:]]
-        tagged_words =[(word.strip(),tag.strip()) for word,tag in raw_word_tag]
+        raw_word_tag = [tuple(word.split('/')) for word in line.split()[1:]]
+        tagged_words = [(word.strip(),tag.strip()) for word,tag in raw_word_tag]
         tagged_sents.append(tagged_words)
     f.close()
     return tagged_sents
 
 def train():
-    tagged_sents=process_corpus()
-    tagged_words=[(w,t) for sent in tagged_sents for w,t in sent]
-    words_set=sorted(list(set([w for w,t in tagged_words])))
+    tagged_sents = process_corpus()
+    tagged_words = [(w,t) for sent in tagged_sents for w,t in sent]
+    words_set = sorted(list(set([w for w,t in tagged_words])))
     words_set.append("UNK")
-    labels_set=tags_set()
-    emission_prob=cal_condition_prob(labels_set,words_set,tagged_words)
+    labels_set = tags_set()
+    emission_prob = cal_condition_prob(labels_set, words_set, tagged_words)
     
-    labels=[t for w,t in tagged_words]
-    symbol_label=Condition(labels)
-    trans_prob=cal_condition_prob(labels_set,labels_set,symbol_label,discount=0.1)
+    labels = [t for w,t in tagged_words]
+    symbol_label = Condition(labels)
+    trans_prob = cal_condition_prob(labels_set, labels_set, symbol_label, discount=0.1)
     
-    init_label=[t for w,t in [sent[0] for sent in tagged_sents if sent]]
-    init_prob=ProbDist(AbsoluteDiscounting(FreqDist(labels_set,init_label),discount=0.01))
-    save_parameters("data/HMMTagger.parameters.npz",init_prob,trans_prob,emission_prob)
+    init_label = [t for w,t in [sent[0] for sent in tagged_sents if sent]]
+    init_prob = ProbDist(AbsoluteDiscounting(FreqDist(labels_set, init_label), discount=0.01))
+    save_parameters("data/HMMTagger.parameters.npz", init_prob, trans_prob, emission_prob)
     
-    word_index=symbols2index(words_set)
-    label_index=index2labels(labels_set)
+    word_index = symbols2index(words_set)
+    label_index = index2labels(labels_set)
     with open("data/Taggerindex.pkl","wb") as f:
-        pickle.dump(word_index,f)
-        pickle.dump(label_index,f)
+        pickle.dump(word_index, f)
+        pickle.dump(label_index, f)
     f.close()
