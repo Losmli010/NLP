@@ -1,7 +1,8 @@
 # coding: utf-8
 
-from utils import *
 import pickle
+
+from utils import *
 
 def tags_set():
     tags=['Ag',          #形语素
