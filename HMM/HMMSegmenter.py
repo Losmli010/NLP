@@ -31,11 +31,11 @@ def cut(sentence):
     seg = ''
     for char,tag in zip(tokens,sequence):
         if tag=='B':
-            seg += ''.join(' '+char)
+            seg += ''.join([' ', char])
         elif tag=='M':
             seg += ''.join(char)
         elif tag=='E':
-            seg += ''.join(char+' ')
+            seg += ''.join([char, ' '])
         else:
-            seg += ''.join(' '+char+' ')
+            seg += ''.join([' ', char, ' '])
     return seg.strip()
