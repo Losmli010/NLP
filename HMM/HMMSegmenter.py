@@ -1,9 +1,10 @@
 # coding: utf-8
 
-from utils import *
-from viterbi import viterbi
 import pickle
 import re
+
+from utils import *
+from viterbi import viterbi
 
 def tokenizer(sentence):
     re_chinese = re.compile(r"([\u4E00-\u9FA5]+)")
