@@ -1,7 +1,8 @@
 # coding: utf-8
 
-from utils import *
 import pickle
+
+from utils import *
 from viterbi import viterbi
 
 def tagger(sentence):
