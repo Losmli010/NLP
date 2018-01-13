@@ -1,10 +1,11 @@
 # coding: utf-8
 
-from utils import *
-from trainTagger import process_corpus
 import numpy as np
 import re
 import pickle
+
+from utils import *
+from trainTagger import process_corpus
 
 def preprocessing():
     tagged_sents = process_corpus()
