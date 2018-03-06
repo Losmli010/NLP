@@ -20,23 +20,23 @@ def tokenizer(sentence):
     return tokens
 
 def cut(sentence):
-    Pi,A,B=load_parameters("data/HMMSegmenter.parameters.npz")
+    Pi,A,B = load_parameters("data/HMMSegmenter.parameters.npz")
     with open("data/Segmenterindex.pkl","rb") as f:
         char_index = pickle.load(f)
         label_index = pickle.load(f)
     f.close()
     tokens = tokenizer(sentence)
-    obs = map_obs(char_index,tokens)
-    prob,route = viterbi(obs,Pi,A,B)
+    obs = map_obs(char_index, tokens)
+    prob, route = viterbi(obs,Pi,A,B)
     sequence = [label_index[i] for i in route]
-    seg = ''
-    for char,tag in zip(tokens,sequence):
-        if tag=='B':
-            seg += ''.join([' ', char])
-        elif tag=='M':
-            seg += ''.join(char)
-        elif tag=='E':
-            seg += ''.join([char, ' '])
+    words = []
+    for char, tag in zip(tokens, sequence):
+        if tag == 'B':
+            words += [char]
+        elif tag == 'M':
+            words += [char]
+        elif tag == 'E':
+            words += [char, ' ']
         else:
-            seg += ''.join([' ', char, ' '])
-    return seg.strip()
+            words += [char, ' ']
+    return "".join(words)
