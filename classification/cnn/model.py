@@ -3,12 +3,27 @@
 import tensorflow as tf
 import numpy as np
 
+import utils
+
+def get_embeddings(word2vec_path, vocab_path, embedding_dim):
+    vocab, vocab_dict = utils.load_vocab(vocab_path)
+    vocab_size = len(vocab)
+    if word2vec_path and vocab_path:
+        print("Loading word2vec embeddings...")
+        word2vec_dict, embedding_dim = utils.load_words_vector(word2vec_path, vocab)
+        initializer = utils.build_initial_embedding_matrix(vocab_dict, word2vec_dict, embedding_dim)
+    else:
+        print("No word2vec path specificed, starting with random embeddings.")
+        initializer = tf.random_uniform([vocab_size, embedding_dim], -1.0, 1.0)
+
+    return tf.Variable(initializer, dtype=tf.float32, name="word_embeddings")
+
 class TextCNN(object):
     """
     A CNN for text classification
     """
-    def __init__(self, sequence_length, num_classes, vocab_size, 
-                 embedding_dim, filter_sizes, num_filters, l2_lambda):
+    def __init__(self, sequence_length, num_classes, vocab_size, embedding_dim, 
+                 filter_sizes, num_filters, l2_lambda, word2vec_path, vocab_path):
         
         self.inputs = tf.placeholder(tf.int32, [None, sequence_length], name="inputs")
         self.targets = tf.placeholder(tf.float32, [None, num_classes], name="targets")
@@ -16,8 +31,7 @@ class TextCNN(object):
         l2_loss = tf.constant(0.0)
         
         with tf.device("/cpu:0"), tf.name_scope("embedding"):
-            self.words_embedding = tf.Variable(
-                tf.random_uniform([vocab_size, embedding_dim], -1.0, 1.0), name="words_embedding")
+            self.words_embedding = get_embeddings(word2vec_path, vocab_path, embedding_dim)
             self.embedded_words = tf.nn.embedding_lookup(self.words_embedding, self.inputs)
             self.embedded_words_expanded = tf.expand_dims(self.embedded_words, -1)
         
