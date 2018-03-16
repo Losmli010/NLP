@@ -4,7 +4,6 @@ import os
 import argparse
 
 import tensorflow as tf
-from tensorflow.contrib import learn
 import numpy as np
 
 import utils
@@ -15,6 +14,7 @@ def hparams():
     # Data loading params
     parser.add_argument("--positive_sentiment_file", type=str, default="data/positive_sentiment.txt", help="Data source for the positive data")
     parser.add_argument("--negative_sentiment_file", type=str, default="data/negative_sentiment.txt", help="Data source for the negative data")
+    parser.add_argument("--vocab_file", type=str, default="data/vocab.txt", help="Vocabulary")
     
     # Model Parameters
     parser.add_argument("--batch_size", type=int, default=64, help="Batch size")
@@ -29,8 +29,8 @@ def test():
     y_test = np.argmax(y_test, axis=1)
 
     # Map data into vocabulary
-    vocab_processor = learn.preprocessing.VocabularyProcessor.restore("data/vocab")
-    x_test = np.array(list(vocab_processor.transform(x_raw)))
+    vocab, vocab_dict = utils.load_vocab(args.vocab_file)
+    x_test = np.array(utils.fit_transform(x_raw, vocab_dict))
 
     # Evaluation
     checkpoint_dir = os.path.abspath(os.path.join(os.path.curdir, "checkpoints"))
