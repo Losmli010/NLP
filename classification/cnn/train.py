@@ -6,7 +6,6 @@ import argparse
 
 import numpy as np
 import tensorflow as tf
-from tensorflow.contrib import learn
 
 import utils
 from model import TextCNN
@@ -15,12 +14,14 @@ def hparams():
     parser = argparse.ArgumentParser()
     
     # Data loading params
-    parser.add_argument("--dev_sample_percentage", type=float, default=0.1, help="Percentage of the training data to use for validation")
+    parser.add_argument("--dev_sample_percentage", type=float, default=0.3, help="Percentage of the training data to use for validation")
     parser.add_argument("--positive_sentiment_file", type=str, default="data/positive_sentiment.txt", help="Data source for the positive data")
     parser.add_argument("--negative_sentiment_file", type=str, default="data/negative_sentiment.txt", help="Data source for the negative data")
+    parser.add_argument("--vocab_file", type=str, default="data/vocab.txt", help="Vocabulary")
+    parser.add_argument("--word2vec_file", type=str, default=None, help="Chinese wiki word2vec")
     
     # Model Parameters
-    parser.add_argument("--embedding_dim", type=int, default=128, help="Dimensionality of the word embedding")
+    parser.add_argument("--embedding_dim", type=int, default=256, help="Dimensionality of the word embedding")
     parser.add_argument("--filter_sizes", type=str, default="3,4,5", help="Comma-separated filter sizes")
     parser.add_argument("--num_filters", type=int, default=128, help="Number of filters per filter size")
     
@@ -44,11 +45,9 @@ def train():
 
     # Build vocabulary
     max_sentence_length = max([len(x.split()) for x in x_text])
-    vocab_processor = learn.preprocessing.VocabularyProcessor(max_sentence_length)
-    x = np.array(list(vocab_processor.fit_transform(x_text)))
-    
-    # Write vocabulary
-    vocab_processor.save("data/vocab")
+    utils.get_vocab(args.vocab_file, x_text)
+    vocab, vocab_dict = utils.load_vocab(args.vocab_file)
+    x = np.array(utils.fit_transform(x_text, vocab_dict))
 
     # Randomly shuffle data
     np.random.seed(10)
@@ -63,7 +62,7 @@ def train():
 
     del x, y, x_shuffled, y_shuffled
 
-    print("Vocabulary Size: {:d}".format(len(vocab_processor.vocabulary_)))
+    print("Vocabulary Size: {:d}".format(len(vocab)))
     print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev)))
     
     #Training
@@ -71,11 +70,13 @@ def train():
     with sess.as_default():
         cnn = TextCNN(sequence_length=max_sentence_length,
                       num_classes=2,
-                      vocab_size=len(vocab_processor.vocabulary_),
+                      vocab_size=len(vocab),
                       embedding_dim=args.embedding_dim,
                       filter_sizes=list(map(int, args.filter_sizes.split(","))),
                       num_filters=args.num_filters, 
-                      l2_lambda=args.l2_lambda)
+                      l2_lambda=args.l2_lambda, 
+                      word2vec_path=args.word2vec_file, 
+                      vocab_path=args.vocab_file)
         
         global_step = tf.Variable(0, name="global_step", trainable=False)
         optimizer = tf.train.AdamOptimizer(args.learning_rate)
