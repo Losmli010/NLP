@@ -113,10 +113,10 @@ def train_chi2():
     X_test = vectorizer.transform(test_data)
     X = vectorizer.transform(data)
     
-#    ch2 = SelectKBest(chi2, k=50000)
-#    X_train = ch2.fit_transform(X_train, y_train)
-#    X_test = ch2.transform(X_test)
-#    X = ch2.transform(X)
+    ch2 = SelectKBest(chi2, k=50000)
+    X_train = ch2.fit_transform(X_train, y_train)
+    X_test = ch2.transform(X_test)
+    X = ch2.transform(X)
     
     NBclf = MultinomialNB()
     NBclf.fit(X_train, y_train)
