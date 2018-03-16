@@ -79,13 +79,11 @@ def generate(start_word, length):
                         num_layers=args.num_layers, 
                         batch_size=args.batch_size, 
                         training=False)
-            sess.run(tf.global_variables_initializer())
-            saver = tf.train.Saver(tf.global_variables())
+            saver = tf.train.Saver()
             saver.restore(sess, checkpoint_file)
             
             for _ in range(length):
                 data = np.array([text_data])
-                data.reshape((1,len(text_data)))
                 predictions = sess.run(rnn.prediction, feed_dict={rnn.input_data: data})
                 text_data.append(predictions[-1])
                 
