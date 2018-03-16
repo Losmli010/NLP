@@ -83,7 +83,7 @@ def train():
         sess.run(tf.global_variables_initializer())
         
         # Generate batches
-        batches = utils.batch_iter(list(zip(encoder_inputs[:500], decoder_inputs[:500], decoder_outputs[:500])), 
+        batches = utils.batch_iter(list(zip(encoder_inputs, decoder_inputs, decoder_outputs)), 
                                    args.batch_size, args.num_epochs, False)
         
         initial_state = sess.run(model.initial_state)
@@ -159,7 +159,7 @@ def sub_train():
             saver.restore(sess, last_checkpoint_file)
         
             # Generate batches
-            batches = utils.batch_iter(list(zip(encoder_inputs[:500], decoder_inputs[:500], decoder_outputs[:500])), 
+            batches = utils.batch_iter(list(zip(encoder_inputs, decoder_inputs, decoder_outputs)), 
                                        args.batch_size, args.num_epochs, False)
         
             # Training loop...
