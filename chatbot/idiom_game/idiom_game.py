@@ -2,7 +2,7 @@
 
 import random
 
-class idiom_game(object):
+class IdiomGame(object):
     def __init__(self):
         self.idiom_pinyin = {}
         self.pinyin_idiom = {}
@@ -85,5 +85,5 @@ class idiom_game(object):
         self.remove_idiom(self.outputs)
                     
 if __name__=="__main__":
-    game = idiom_game()
+    game = IdiomGame()
     game.play()
