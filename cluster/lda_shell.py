@@ -8,6 +8,7 @@ import re
 from six import iteritems
 from gensim import corpora, models
 
+
 def get_dict(filename, dictname):
     curdir = sys.path[0]
     f = open(os.path.join(curdir,"data",filename), "r", encoding="utf-8")
@@ -25,6 +26,7 @@ def get_dict(filename, dictname):
     dictionary.save(os.path.join(curdir, dictname))
     print("Save dictionary to %s for later use" % dictname)
 
+
 def get_lda(dictname, tfidfname, ldaname, num_topics):
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     
@@ -39,6 +41,7 @@ def get_lda(dictname, tfidfname, ldaname, num_topics):
     ldadir = os.path.join(curdir, "test", ldaname)
     lda.save(ldadir)
     print("Save lda model to %s" % ldaname)
-    
+
+
 if __name__=="__main__":
     get_lda("zhwiki.dict", "zhwiki.tfidf", "zhwiki.lda.model", 100)

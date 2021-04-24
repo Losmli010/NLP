@@ -1,9 +1,10 @@
 # coding: utf-8
-
 import os
 import logging
+
 from gensim.models import Word2Vec
 from gensim.models.word2vec import LineSentence
+
 
 class sentence_iter(object):
     def __init__(self, dirname):
@@ -13,7 +14,8 @@ class sentence_iter(object):
         for fname in os.listdir(self.dirname):
             for line in open(os.path.join(self.dirname, fname), "r", encoding="utf-8"):
                 yield line.split()
-                
+
+
 def train_word2vec(filename):
     logging.basicConfig(format='%(asctime)s : %(levelname)s : %(message)s', level=logging.INFO)
     

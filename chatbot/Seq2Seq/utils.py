@@ -1,11 +1,13 @@
 # coding: utf-8
 
 from collections import Counter
+
 import numpy as np
 
 EOS = "EOS"
 UNK = "UNK"
 VOCAB_SIZE = 50000
+
 
 def load_data(filename):
     x_input = []
@@ -19,6 +21,7 @@ def load_data(filename):
             y_output.append("{} {}".format(line[1], EOS))
     return x_input, y_input, y_output
 
+
 def get_vocab(filename, text):
     counter = Counter()
     for sent in text:
@@ -28,13 +31,15 @@ def get_vocab(filename, text):
         for w, _ in vocab:
             f.write(w + "\n")
     print("Save vocab to %s" %filename)
-    
+
+
 def load_vocab(filename):
     with open(filename, "r", encoding="utf-8") as f:
         vocab = [line.strip() for line in f]
         vocab.append(UNK)
         vocab_dict = dict(zip(vocab, range(1, len(vocab) + 1)))
     return vocab_dict
+
 
 def encoder_transform(text, vocab_dict):
     max_sentence_length = max([len(x.split()) for x in text])
@@ -51,6 +56,7 @@ def encoder_transform(text, vocab_dict):
         text2num.append(sent2num)
     return text2num
 
+
 def decoder_transform(text, vocab_dict):
     max_sentence_length = max([len(x.split()) for x in text])
     text2num = []
@@ -65,7 +71,8 @@ def decoder_transform(text, vocab_dict):
         sent2num += list(np.zeros(pad_length, dtype=np.int32))
         text2num.append(sent2num)
     return text2num
-                         
+
+
 def load_words_vector(filename, vocab_dict):
     word2vec_dict = {}
     with open(filename, "r", encoding="utf-8") as f:
@@ -79,12 +86,14 @@ def load_words_vector(filename, vocab_dict):
     print("Found {} out of {} in word2vec." .format(len(word2vec_dict), len(vocab)))
     return word2vec_dict,embedding_dim
 
+
 def build_initial_embedding_matrix(vocab_dict, word2vec_dict, embedding_dim):
     initial_embeddings = np.random.uniform(-1.0, 1.0, (len(vocab_dict) + 1, embedding_dim))
     for word, index in vocab_dict.items():
         if word in word2vec_dict:
             initial_embeddings[index, :] = word2vec_dict[word]
     return initial_embeddings
+
 
 def batch_iter(data, batch_size, num_epochs, shuffle=True):
     data = np.array(data)

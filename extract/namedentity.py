@@ -1,30 +1,35 @@
 import os
+
 from pyltp import SentenceSplitter
 from pyltp import Segmentor
 from pyltp import Postagger
 from pyltp import NamedEntityRecognizer
-
 import jieba
+
 
 LTP_DATA_DIR = "D:\\Anaconda\\Lib\\site-packages\\ltp\\3.4"
 text = "元芳你怎么看？我就趴窗口上看呗！"
 
+
 def split(text):
     return SentenceSplitter.split(text)
+
 
 def cut(sentences):
     return jieba.cut(sentences)
 
+
 def segment(sentences):
     cws_model_path = os.path.join(LTP_DATA_DIR, "cws.model")
-    lexicon_path = os.path.join(LTP_DATA_DIR,"lexicon.txt")
+    lexicon_path = os.path.join(LTP_DATA_DIR, "lexicon.txt")
 
     segmentor = Segmentor()
-    #segmentor.load(cws_model_path)
+    # segmentor.load(cws_model_path)
     segmentor.load_with_lexicon(cws_model_path, lexicon_path)
     words = segmentor.segment(sentences)
     segmentor.release()
     return words
+
 
 def pos(words):
     pos_model_path = os.path.join(LTP_DATA_DIR, "pos.model")
@@ -35,6 +40,7 @@ def pos(words):
     postagger.release()
     return postags
 
+
 def ner(words, postags):
     ner_model_path = os.path.join(LTP_DATA_DIR, "ner.model")
 
@@ -43,6 +49,7 @@ def ner(words, postags):
     netags = recognizer.recognize(words, postags)
     recognizer.release()
     return netags
+
 
 def match(tokens, tag, tags, word, namedentity):
     if tokens[0] == "B":
@@ -58,6 +65,7 @@ def match(tokens, tag, tags, word, namedentity):
         tags += [tag, " "]
         namedentity += [word, " "]
     return tags, namedentity
+
 
 def recognize(words, netags):
     namedentity = []

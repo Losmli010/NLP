@@ -9,13 +9,14 @@ import numpy as np
 import utils
 from model import RNNLM
 
+
 def test():
     parser = argparse.ArgumentParser()
     parser.add_argument("--vocab_file", type=str, default="data/vocab.pkl", help="Vocabulary dictionary")
     parser.add_argument("--text_file", type=str, default="data/littleprince.txt", help="Data source for the shakespeare data")
     parser.add_argument("--sequence_length", type=int, default=25, help="Sequence length")
     parser.add_argument("--batch_size", type=int, default=64, help="Minibatch size")
-    args,_ = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     
     vocab_dict = utils.load_vocab(args.vocab_file)
     index2word = dict(zip(vocab_dict.values(), vocab_dict.keys()))
@@ -51,6 +52,7 @@ def test():
     content = [index2word[prediction] for prediction in all_predictions]
     return "".join(content) 
 
+
 def generate(start_word, length):
     parser = argparse.ArgumentParser()
     parser.add_argument("--vocab_file", type=str, default="data/vocab.pkl", help="Vocabulary dictionary")
@@ -59,7 +61,7 @@ def generate(start_word, length):
     parser.add_argument("--rnn_size", type=int, default=128, help="Hidden units of rnn layer ")
     parser.add_argument("--num_layers", type=int, default=2, help="Number of rnn layer")
     parser.add_argument("--batch_size", type=int, default=1, help="Minibatch size")
-    args,_ = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     
     vocab_dict = utils.load_vocab(args.vocab_file)
     index2word = dict(zip(vocab_dict.values(), vocab_dict.keys()))

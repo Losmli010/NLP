@@ -4,6 +4,7 @@ import tensorflow as tf
 from tensorflow.contrib import rnn
 import numpy as np
 
+
 class RNNLM(object):
     def __init__(self, vocab_size, embedding_dim, rnn_size, 
                  num_layers, batch_size, training):
@@ -13,7 +14,7 @@ class RNNLM(object):
         self.input_keep_prob = tf.placeholder(tf.float32, name="input_keep_prob")
         self.output_keep_prob = tf.placeholder(tf.float32, name="output_keep_prob")
         
-        #Embedding layer
+        # Embedding layer
         with tf.name_scope("embedding"):
             words_embedding = tf.Variable(
                 tf.random_uniform([vocab_size, embedding_dim], -1.0, 1.0), name="words_embedding")
@@ -21,7 +22,7 @@ class RNNLM(object):
             if training:
                 inputs = tf.nn.dropout(inputs, self.input_keep_prob)
         
-        #Build LSTM cell
+        # Build LSTM cell
         def lstm_cell():
             cell = rnn.LSTMCell(rnn_size, state_is_tuple=True)
             if training:

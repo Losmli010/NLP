@@ -18,6 +18,7 @@ def doc_iter(filepath):
             line = line.strip()
             yield line
 
+
 def lsa_kmeans(raw_doc, n_components, n_clusters):
     logger = logging.getLogger("lsa_kmeans")
     logger.info("Loading stop words...")
@@ -44,12 +45,14 @@ def lsa_kmeans(raw_doc, n_components, n_clusters):
     clf.fit(X)
     return clf
 
+
 def save_model(clf, path):
     print("Save KMeans model to %s" % path)
     with open(path, "wb") as f:
         pickle.dump(clf, f)
     f.close()
     
+
 def load_model(path):
     print("Load KMeans model to %s" % path)
     with open(path, "rb") as f:
@@ -57,15 +60,16 @@ def load_model(path):
     f.close()
     return clf
 
+
 def categories():
-    return ["life_art_culture",                 #生活、艺术与文化
-            "chinese_culture",                  #中华文化
-            "social",                           #社会
-            "religion_belief",                  #宗教及信仰
-            "world",                            #世界各地
-            "social_sciences",                  #人文与社会科学
-            "natural_science",                  #自然与自然科学
-            "engineering_technology",           #工程、技术与应用科学
-            "general_works",                    #常用列表
-            "topic"                             #主题首页
+    return ["life_art_culture",                 # 生活、艺术与文化
+            "chinese_culture",                  # 中华文化
+            "social",                           # 社会
+            "religion_belief",                  # 宗教及信仰
+            "world",                            # 世界各地
+            "social_sciences",                  # 人文与社会科学
+            "natural_science",                  # 自然与自然科学
+            "engineering_technology",           # 工程、技术与应用科学
+            "general_works",                    # 常用列表
+            "topic"                             # 主题首页
            ]

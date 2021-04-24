@@ -1,5 +1,6 @@
 # coding: utf-8
 
+
 def accuracy(reference, test):
     """
     Calculate the fraction of test items that equal the corresponding reference items.

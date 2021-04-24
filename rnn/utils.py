@@ -3,6 +3,7 @@
 import pickle
 import numpy as np
 
+
 def load_data(text_file):
     f = open(text_file, "r", encoding="utf-8")
     sentences = [line.strip() for line in f]
@@ -15,27 +16,32 @@ def load_data(text_file):
     text = " ".join(sentences)
     return text.split()
 
+
 def build_vocab(text):
     vocab = list(set(text))
     print("There are %s unique tokens" % len(vocab))
     vocab_dict = dict(zip(vocab, range(len(vocab))))
     return vocab_dict
-        
+
+
 def save_vocab(vocab_dict ,vocab_file):
     with open(vocab_file, "wb") as f:
         pickle.dump(vocab_dict, f)
     f.close()
     print("Save vocab to %s" % vocab_file)
-        
+
+
 def load_vocab(vocab_file):
     with open(vocab_file, "rb") as f:
         vocab_dict = pickle.load(f)
     f.close()
     print("Load vocab from %s" % vocab_file)
     return vocab_dict
-    
+
+
 def transform(text, vocab_dict):
     return [vocab_dict[word] for word in text]
+
 
 def batch_iter(data, sequence_length, batch_size):
     data = np.array(data)

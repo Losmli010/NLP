@@ -8,6 +8,7 @@ import numpy as np
 
 import utils
 
+
 def hparams():
     parser = argparse.ArgumentParser()
     
@@ -19,8 +20,9 @@ def hparams():
     # Model Parameters
     parser.add_argument("--batch_size", type=int, default=64, help="Batch size")
 
-    args,_ = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     return args
+
 
 def test():
     args = hparams()
@@ -64,4 +66,4 @@ def test():
     # Print accuracy if y_test is defined
     correct_predictions = float(sum(all_predictions == y_test))
     print("Total number of test examples: {}".format(len(y_test)))
-    print("Accuracy: {:g}".format(correct_predictions/float(len(y_test))))
+    print("Accuracy: {:g}".format(correct_predictions / float(len(y_test))))

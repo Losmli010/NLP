@@ -10,6 +10,7 @@ import tensorflow as tf
 import utils
 from model import TextCNN
 
+
 def hparams():
     parser = argparse.ArgumentParser()
     
@@ -33,8 +34,9 @@ def hparams():
     parser.add_argument("--l2_lambda", type=float, default=1e-4, help="Lambda for l2 regularization")
     parser.add_argument("--evaluate_steps", type=int, default=100, help="Evaluate model on dev set after this many steps")
 
-    args,_ = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     return args
+
 
 def train():
     args = hparams()
@@ -65,7 +67,7 @@ def train():
     print("Vocabulary Size: {:d}".format(len(vocab)))
     print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_dev)))
     
-    #Training
+    # Training
     sess = tf.Session()
     with sess.as_default():
         cnn = TextCNN(sequence_length=max_sentence_length,
@@ -124,7 +126,7 @@ def train():
             time_str = datetime.datetime.now().isoformat()
             print("{}: step {}, loss {:g}, accuracy {:g}".format(time_str, step, loss, accuracy))
             
-            #Evaluate on dev set
+            # Evaluate on dev set
             current_step = tf.train.global_step(sess, global_step)
             if current_step % args.evaluate_steps == 0:
                 dev_feed_dict = {cnn.inputs: x_dev, 

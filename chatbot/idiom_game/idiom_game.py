@@ -2,6 +2,7 @@
 
 import random
 
+
 class IdiomGame(object):
     def __init__(self):
         self.idiom_pinyin = {}
@@ -58,10 +59,10 @@ class IdiomGame(object):
         f = open("idioms.txt", "r", encoding="utf-8")
         for line in f:
             tokens = line.strip().split("||")
-            #idioms dictionary, dict(idiom = pinyin)
+            # idioms dictionary, dict(idiom = pinyin)
             self.idiom_pinyin[tokens[0]] = tokens[1]
             
-            #first word pinyin dictionary, dict(first_pinyin = [idiom1, idioms2])
+            # first word pinyin dictionary, dict(first_pinyin = [idiom1, idioms2])
             first_pinyin = tokens[1].split()[0]
             self.pinyin_idiom.setdefault(first_pinyin, [])
             self.pinyin_idiom[first_pinyin].append(tokens[0])
@@ -83,7 +84,8 @@ class IdiomGame(object):
     def update_dict(self):
         self.remove_idiom(self.inputs)
         self.remove_idiom(self.outputs)
-                    
+
+
 if __name__=="__main__":
     game = IdiomGame()
     game.play()

@@ -1,10 +1,10 @@
 # coding: utf-8
-
 import pickle
 import re
 
 from utils import *
 from viterbi import viterbi
+
 
 def tokenizer(sentence):
     re_chinese = re.compile(r"([\u4E00-\u9FA5]+)")
@@ -12,22 +12,23 @@ def tokenizer(sentence):
     block = re.split(re_chinese,sentence)
     tokens = []
     for s in block:
-        if re.match(re_chinese,s):
+        if re.match(re_chinese, s):
             tokens += [s[i] for i in range(len(s))]
         else:
-            tem = re.split(re_english,s)
+            tem = re.split(re_english, s)
             tokens += [x for x in tem if x]
     return tokens
 
+
 def cut(sentence):
     Pi,A,B = load_parameters("data/HMMSegmenter.parameters.npz")
-    with open("data/Segmenterindex.pkl","rb") as f:
+    with open("data/Segmenterindex.pkl", "rb") as f:
         char_index = pickle.load(f)
         label_index = pickle.load(f)
     f.close()
     tokens = tokenizer(sentence)
     obs = map_obs(char_index, tokens)
-    prob, route = viterbi(obs,Pi,A,B)
+    prob, route = viterbi(obs, Pi, A, B)
     sequence = [label_index[i] for i in route]
     words = []
     for char, tag in zip(tokens, sequence):

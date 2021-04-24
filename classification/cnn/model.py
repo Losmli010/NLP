@@ -5,6 +5,7 @@ import numpy as np
 
 import utils
 
+
 def get_embeddings(word2vec_path, vocab_path, embedding_dim):
     vocab, vocab_dict = utils.load_vocab(vocab_path)
     vocab_size = len(vocab)
@@ -17,6 +18,7 @@ def get_embeddings(word2vec_path, vocab_path, embedding_dim):
         initializer = tf.random_uniform([vocab_size, embedding_dim], -1.0, 1.0)
 
     return tf.Variable(initializer, dtype=tf.float32, name="word_embeddings")
+
 
 class TextCNN(object):
     """

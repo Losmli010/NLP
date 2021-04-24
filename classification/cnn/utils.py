@@ -3,9 +3,11 @@
 import numpy as np
 import re
 
+
 def clean_str(string):
     string = re.sub(r"[^\u4E00-\u9FA5，！？。\“\”《》A-Za-z0-9(),!?\'\`]", " ", string)
     return string.strip()
+
 
 def load_data(positive_sentiment_file, negative_sentiment_file):
     positive_sentiments = [line.strip() for line in open(positive_sentiment_file, "r", encoding="utf-8")]
@@ -15,6 +17,7 @@ def load_data(positive_sentiment_file, negative_sentiment_file):
     negative_labels = [[1, 0] for _ in negative_sentiments]
     y = np.concatenate([positive_labels, negative_labels], 0)
     return [x_text, y]
+
 
 def batch_iter(data, batch_size, num_epochs, shuffle=True):
     data = np.array(data)
@@ -31,6 +34,7 @@ def batch_iter(data, batch_size, num_epochs, shuffle=True):
             end_index = min((batch_num + 1) * batch_size, data_size)
             yield shuffled_data[start_index:end_index]
 
+
 def get_vocab(filename, text):
     words = [word for sent in text for word in sent.split()]
     vocab = set(words)
@@ -39,11 +43,13 @@ def get_vocab(filename, text):
             f.write(w + "\n")
     print("Save vocab to %s" %filename)
     
+
 def load_vocab(filename):
     with open(filename, "r", encoding="utf-8") as f:
         vocab = [line.strip() for line in f]
         vocab_dict = dict(zip(vocab, range(len(vocab))))
     return vocab, vocab_dict
+
 
 def fit_transform(text, vocab_dict):
     max_sentence_length = max([len(x.split()) for x in text])
@@ -54,7 +60,8 @@ def fit_transform(text, vocab_dict):
         sent2num += list(np.zeros((pooled_length)))
         text2num.append(sent2num)
     return text2num
-                         
+
+
 def load_words_vector(filename, vocab):
     word2vec_dict = {}
     with open(filename, "r", encoding="utf-8") as f:
@@ -67,6 +74,7 @@ def load_words_vector(filename, vocab):
     embedding_dim = len(vector)
     print("Found {} out of {} in word2vec." .format(len(word2vec_dict), len(vocab)))
     return word2vec_dict,embedding_dim
+
 
 def build_initial_embedding_matrix(vocab_dict, word2vec_dict, embedding_dim):
     initial_embeddings = np.random.uniform(-1.0, 1.0, (len(vocab_dict), embedding_dim))

@@ -4,6 +4,7 @@ import re
 from six import iteritems
 from gensim import corpora, models
 
+
 def get_dict(filepath, dictpath):
     f = open(filepath, "r", encoding="utf-8")
     dictionary = corpora.Dictionary(line.strip().split() for line in f)
@@ -18,7 +19,8 @@ def get_dict(filepath, dictpath):
     print(dictionary)
     dictionary.save(dictpath)
     print("Save dictionary to %s for later use" % dictpath)
-    
+
+
 def _iter_(filepath, dictpath):
     dictionary = corpora.Dictionary.load(dictpath)
     f = open(filepath, "r", encoding="utf-8")
@@ -26,13 +28,15 @@ def _iter_(filepath, dictpath):
         line = line.strip().split()
         yield dictionary.doc2bow(line)
 
+
 def get_corpus(filepath, dictpath, corpuspath):
     corpus_iter = _iter_(filepath, dictpath)
     corpus_tf = [vector for vector in corpus_iter]
     print("Corpus example:%s" % corpus_tf[:5])
     corpora.MmCorpus.serialize(corpuspath, corpus_tf)
     print("Save corpus to %s for later use" % corpuspath)
-    
+
+
 def get_tfidf(dictpath, corpuspath, tfidfpath):
     dictionary = corpora.Dictionary.load(dictpath)
     print(dictionary)
@@ -42,7 +46,8 @@ def get_tfidf(dictpath, corpuspath, tfidfpath):
     corpus_tfidf = tfidf_model[corpus_tf]
     corpora.MmCorpus.serialize(tfidfpath, corpus_tfidf)
     print("Save tfidf to %s for later use" % tfidfpath)
-    
+
+
 def get_lsi(dictpath, tfidfpath, lsipath, num_topics):
     dictionary = corpora.Dictionary.load(dictpath)
     print(dictionary)
@@ -52,6 +57,7 @@ def get_lsi(dictpath, tfidfpath, lsipath, num_topics):
     lsi.save(lsipath)
     print("Save lsi model to %s" % lsipath)
     
+
 def get_lda(dictpath, tfidfpath, ldapath, num_topics):
     dictionary = corpora.Dictionary.load(dictpath)
     print(dictionary)
@@ -60,7 +66,8 @@ def get_lda(dictpath, tfidfpath, ldapath, num_topics):
     lda = models.ldamodel.LdaModel(corpus=corpus_tfidf, id2word=dictionary, num_topics=num_topics, update_every=1, chunksize=10000, passes=1)
     lda.save(ldapath)
     print("Save lda model to %s" % ldapath)
-    
+
+
 def apply_labels(tfidfpath, ldapath, labelspath):
     corpus_tfidf = corpora.MmCorpus(tfidfpath)
     lda = models.LdaModel.load(ldapath)

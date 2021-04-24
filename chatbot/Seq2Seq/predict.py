@@ -10,7 +10,9 @@ import jieba
 from model import Seq2SeqModel
 import utils
 
+
 EOS = "EOS"
+
 
 def generate(query):
     parser = argparse.ArgumentParser()
@@ -21,7 +23,7 @@ def generate(query):
     parser.add_argument("--rnn_size", type=int, default=256, help="Hidden units of rnn layer ")
     parser.add_argument("--num_layers", type=int, default=4, help="Number of rnn layer")
     parser.add_argument("--batch_size", type=int, default=1, help="Minibatch size")
-    args,_ = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     
     vocab_dict = utils.load_vocab(args.vocab_file)
     index2word = dict(zip(vocab_dict.values(), vocab_dict.keys()))

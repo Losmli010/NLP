@@ -10,6 +10,7 @@ import tensorflow as tf
 from model import Seq2SeqModel
 import utils
 
+
 def hparams():
     parser = argparse.ArgumentParser()
     
@@ -33,8 +34,9 @@ def hparams():
     parser.add_argument("--max_grad_norm", type=float, default=10.0, help="Clip global grad norm")
     parser.add_argument("--checkpoint_steps", type=int, default=50, help="Save model after this many steps")
 
-    args,_ = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     return args
+
 
 def train():
     args = hparams()
@@ -47,14 +49,14 @@ def train():
     print("Example of answer : %s" %decoder_outputs[10])
 
     # Build vocabulary
-    #text = encoder_inputs + decoder_inputs
-    #utils.get_vocab(args.vocab_file, text)
+    # text = encoder_inputs + decoder_inputs
+    # utils.get_vocab(args.vocab_file, text)
     vocab_dict = utils.load_vocab(args.vocab_file)
     
     print("Example of query to ids: \n %s" %utils.encoder_transform(encoder_inputs[:100], vocab_dict)[10])
     print("Example of answer to ids: \n %s" %utils.decoder_transform(decoder_outputs[:100], vocab_dict)[10])
     
-    #Training
+    # Training
     sess = tf.Session()
     with sess.as_default():
         model = Seq2SeqModel(vocab_size=args.vocab_size, 
@@ -72,7 +74,7 @@ def train():
         grads, _ = tf.clip_by_global_norm(tf.gradients(model.loss, tvars), args.max_grad_norm)
         train_op = optimizer.apply_gradients(zip(grads, tvars), global_step=global_step)
         
-        #Save model params
+        # Save model params
         checkpoint_dir = os.path.abspath(os.path.join(os.path.curdir, "checkpoints"))
         if not os.path.exists(checkpoint_dir):
             os.makedirs(checkpoint_dir)
@@ -103,12 +105,13 @@ def train():
             time_str = datetime.datetime.now().isoformat()
             print("{}: step {}, loss {:g}".format(time_str, step, loss))
             
-            #Evaluate on dev set
+            # Evaluate on dev set
             current_step = tf.train.global_step(sess, global_step)
             if current_step % args.checkpoint_steps == 0:
                 saver.save(sess, checkpoint_file, global_step=current_step)
                 print("Save model to %s" % checkpoint_file)
-                
+
+
 def sub_train():
     args = hparams()
     
@@ -120,18 +123,18 @@ def sub_train():
     print("Example of answer : %s" %decoder_outputs[10])
 
     # Build vocabulary
-    #text = encoder_inputs + decoder_inputs
-    #utils.get_vocab(args.vocab_file, text)
+    # text = encoder_inputs + decoder_inputs
+    # utils.get_vocab(args.vocab_file, text)
     vocab_dict = utils.load_vocab(args.vocab_file)
     
     print("Example of query to ids: \n %s" %utils.encoder_transform(encoder_inputs[:100], vocab_dict)[10])
     print("Example of answer to ids: \n %s" %utils.decoder_transform(decoder_outputs[:100], vocab_dict)[10])
     
-    #Save model params
+    # Save model params
     checkpoint_dir = os.path.abspath(os.path.join(os.path.curdir, "checkpoints"))
     checkpoint_file = os.path.join(checkpoint_dir, "model")
     
-    #Training
+    # Training
     graph = tf.Graph()
     with graph.as_default():
         sess = tf.Session()
@@ -179,7 +182,7 @@ def sub_train():
                 time_str = datetime.datetime.now().isoformat()
                 print("{}: step {}, loss {:g}".format(time_str, step, loss))
             
-                #Evaluate on dev set
+                # Evaluate on dev set
                 current_step = tf.train.global_step(sess, global_step)
                 if current_step % args.checkpoint_steps == 0:
                     saver.save(sess, checkpoint_file, global_step=current_step)

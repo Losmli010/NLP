@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 
 import numpy as np
 
+
 def preprocessing():
     print("Load data...")
     pos_file = open("data/positive_sentiment.txt", "r", encoding="utf-8")
@@ -20,6 +21,7 @@ def preprocessing():
     labels = list(np.ones((length), dtype=np.int16))
     labels += list(np.zeros((length), dtype=np.int16))
     return data,labels
+
 
 def split_data(data, labels):
     data = np.array(data)
@@ -38,6 +40,7 @@ def split_data(data, labels):
     
     print("Train/Dev split: {:d}/{:d}".format(len(y_train), len(y_test)))
     return train_data, test_data, y_train, y_test
+
 
 def train():
     data,labels = preprocessing()
@@ -69,7 +72,9 @@ def train():
     print ("支持向量机分类器交叉验证得分: ", SVMclf.score(X_test, y_test))
     print("支持向量机二分类器准确率: ", accuracy_score(labels, SVMclf.predict(X)))
 
+
 from sklearn.feature_extraction.text import TfidfVectorizer
+
 
 def train_idf():
     data,labels = preprocessing()
@@ -101,8 +106,10 @@ def train_idf():
     print ("支持向量机分类器交叉验证得分: ", SVMclf.score(X_test, y_test))
     print("支持向量机二分类器准确率: ", accuracy_score(labels, SVMclf.predict(X)))
 
+
 from sklearn.feature_selection import SelectKBest
 from sklearn.feature_selection import chi2
+
 
 def train_chi2():
     data,labels = preprocessing()

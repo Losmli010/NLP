@@ -1,9 +1,9 @@
 import tensorflow as tf
 from tensorflow.contrib import rnn
-
 import numpy as np
 
 import utils
+
 
 def get_embeddings(word2vec_path, vocab_path, embedding_dim):
     vocab_dict = utils.load_vocab(vocab_path)
@@ -18,6 +18,7 @@ def get_embeddings(word2vec_path, vocab_path, embedding_dim):
 
     return tf.Variable(initializer, dtype=tf.float32, name="word_embeddings")
 
+
 class Seq2SeqModel(object):
     """
     Seq2Seq model for chatbot
@@ -31,7 +32,7 @@ class Seq2SeqModel(object):
         self.input_keep_prob = tf.placeholder(tf.float32, name="input_keep_prob")
         self.output_keep_prob = tf.placeholder(tf.float32, name="output_keep_prob")
         
-        #Embedding layer
+        # Embedding layer
         words_embedding = get_embeddings(word2vec_path, vocab_path, embedding_dim)
         encoder_embeddings = tf.nn.embedding_lookup(words_embedding, self.encoder_inputs)
         decoder_embeddings = tf.nn.embedding_lookup(words_embedding, self.decoder_inputs)
@@ -39,14 +40,14 @@ class Seq2SeqModel(object):
             encoder_embeddings = tf.nn.dropout(encoder_embeddings, self.input_keep_prob)
             decoder_embeddings = tf.nn.dropout(decoder_embeddings, self.input_keep_prob)
         
-        #Build lstm cell
+        # Build lstm cell
         def lstm_cell():
             cell = rnn.LSTMCell(rnn_size, reuse=tf.get_variable_scope().reuse)
             if training:
                 cell = rnn.DropoutWrapper(cell=cell, output_keep_prob=self.output_keep_prob)
             return cell
         
-        #RNN for encode input    
+        # RNN for encode input
         with tf.variable_scope("lstm") as vs:
             encoder_cells = rnn.MultiRNNCell(cells=[lstm_cell() for _ in range(num_layers)], state_is_tuple=True)
         self.initial_state = encoder_cells.zero_state(batch_size, tf.float32)
@@ -54,7 +55,7 @@ class Seq2SeqModel(object):
                                                                inputs=encoder_embeddings, 
                                                                initial_state=self.initial_state)
                 
-        #RNN for decode input 
+        # RNN for decode input
         with tf.variable_scope("lstm") as vs:
             vs.reuse_variables()
             decoder_cells = rnn.MultiRNNCell(cells=[lstm_cell() for _ in range(num_layers)], state_is_tuple=True)
@@ -97,10 +98,11 @@ class Seq2SeqModel(object):
                 next_word = np.array([[predictions[-1]]])
                 decoder_inputs = np.hstack((decoder_inputs, next_word))
             print("Inputs is %s" %inputs)
-            print("Prediction is %s" %predictions)
-            
+            print("Prediction is %s" % predictions)
+
+
 def generate_sequence(length):
     seq = np.zeros((1,length * 2), dtype=np.int32)
     x = np.random.randint(length * 2, size=length)
-    seq[:,length:] = x
+    seq[:, length:] = x
     return seq
